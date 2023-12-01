@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Container, Box, Select, MenuItem, Stack, Button } from "@mui/material";
+import { Container, Select, MenuItem, Button } from "@mui/material";
+import { CoinList } from "../../config/api";
+import { useSelector } from "react-redux";
 
 function ExcahangeCurrency() {
   const [coins, setCoins] = useState([]);
   const [enteredAmount, setEnteredAmount] = useState(null);
   const [sellCurrentPrice, setSellCurrentPrice] = useState("");
   const [buyCurrentPrice, setBuyCurrentPrice] = useState("");
+  const currency = useSelector((state) => state.currency.value);
 
   const [totalBtc, setTotalBtc] = useState(`${0} Btc`);
 
   async function fetchCoins() {
     try {
-      const jsonData = await fetch(
-        "https://tusharoxacular09.github.io/cryptocurrency_api/api.json"
-      );
+      const jsonData = await fetch(CoinList(currency));
       const coins = await jsonData.json();
       setCoins(coins.slice(0, 10));
     } catch (error) {
@@ -32,17 +33,28 @@ function ExcahangeCurrency() {
 
   return (
     <>
-      <Container>
-        <Box>
-          <Stack spacing={2} direction="row">
+      <Container className=" bg-white m-2 max-sm:w-full p-4 max-sm:p-2 mt-3 h-80 ">
+        <div
+          style={{
+            fontSize: "1.5rem",
+            fontFamily: "Oswald",
+          }}
+        >
+          Exchange Coins
+        </div>
+        <div className="flex gap-2 items-center max-sm:flex-col mt-6">
+          {" "}
+          {}
+          <div className="w-1/2 max-sm:w-full flex items-center justify-between gap-2">
             <label
+              className="w-2/12 text-center"
               htmlFor="sell"
               style={{ color: "red", fontFamily: "Oswald" }}
             >
               Sell
             </label>
             <Select
-              style={{ width: "10vw", height: "6vh" }}
+              className="w-10/12"
               id="sell"
               value={sellCurrentPrice}
               onChange={(event) => {
@@ -57,14 +69,17 @@ function ExcahangeCurrency() {
                 );
               })}
             </Select>
+          </div>
+          <div className="w-1/2 max-sm:w-full max-sm:mt-2 flex items-center justify-between gap-2">
             <label
+              className="w-2/12 text-center"
               htmlFor="buy"
               style={{ color: "green", fontFamily: "Oswald" }}
             >
               Buy
             </label>
             <Select
-              style={{ width: "10vw", height: "6vh" }}
+              className="w-10/12"
               id="buy"
               value={buyCurrentPrice}
               onChange={(event) => {
@@ -75,43 +90,54 @@ function ExcahangeCurrency() {
                 {coins[0]?.name}
               </MenuItem>
             </Select>
-          </Stack>
-        </Box>
-        <Box style={{ marginTop: "25px", marginLeft: "40px" }}>
-          <Stack spacing={2} direction="row">
+          </div>
+        </div>
+        <div className="flex gap-2 items-center max-sm:flex-col mt-8">
+          {" "}
+          {}
+          <div className="w-1/2 max-sm:w-full flex items-center justify-between gap-2">
+            <div className="w-2/12"></div>
             <input
-              type="text"
+              type="number"
+              className="w-10/12"
               placeholder="Enter Amount"
-              style={{ width: "10vw", height: "5vh" }}
               onChange={onAmountchange}
             />
-            <Button
-              variant="text"
-              style={{ marginLeft: "90px", fontWeight: "bold" }}
-              onClick={(event) => {
-                const totalBtc =
-                  (Number(sellCurrentPrice) / Number(buyCurrentPrice)) *
-                  Number(enteredAmount);
-                setTotalBtc(`${totalBtc.toFixed(2)}`);
-              }}
-            >
-              Exchange
-            </Button>
-          </Stack>
-        </Box>
-        <Box style={{ marginTop: "25px", marginLeft: "40px",fontSize:"2rem"}}>
-            <Stack spacing={2} direction="row">
-            <span
-          style={{
-            fontWeight: "bold",
-            fontFamily: "oswald",
-            
-          }}
-        >
-          Total: {totalBtc}
-        </span>
-            </Stack>
-        </Box>
+          </div>
+          <div className="w-1/2 max-sm:w-full max-sm:mt-2 flex items-center justify-between gap-2">
+            <div className="w-2/12"></div>
+            <div className="w-10/12 font-bold font-oswald text-lg">
+              Total: {totalBtc}
+            </div>
+          </div>
+        </div>
+        <div className="flex gap-2 items-center max-sm:flex-col mt-7">
+          {" "}
+          {/*4 */}
+          <div className="w-1/2 max-sm:w-full flex items-center justify-between gap-2">
+            <div className="w-2/12"></div>
+            <div className="w-10/12"></div>
+          </div>
+          <div className="w-1/2 max-sm:w-full max-sm:mt-2 flex items-center justify-between gap-2">
+            <div>
+              <Button
+                style={{
+                  width: "16.666667%",
+                }}
+                variant="text"
+                onClick={(event) => {
+                  const totalBtc =
+                    (Number(sellCurrentPrice) / Number(buyCurrentPrice)) *
+                    Number(enteredAmount);
+                  setTotalBtc(`${totalBtc.toFixed(2)}`);
+                }}
+              >
+                Exchange
+              </Button>
+            </div>
+            <div className="w-10/12"> </div>
+          </div>
+        </div>
       </Container>
     </>
   );

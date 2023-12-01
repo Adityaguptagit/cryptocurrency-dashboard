@@ -4,43 +4,25 @@ import Nav from "./features/nav/Nav";
 import Sidebar from "./features/sidebar/Sidebar";
 import Chart from "./features/chart/Chart";
 import Portfolio from "./features/portfolio/Portfolio";
-import { Paper, Grid } from "@mui/material";
 import ExcahangeCurrency from "./features/exchange/ExchangeCurrency";
+
 function App() {
   return (
-    <div className="App">
-      <Grid container spacing={1}>
-        <Grid item xs={12}>
-          <Paper >
-            <Header />
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={6} sm={12}>
-          <Paper >
-            <Nav />
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={6} sm={12} lg={6}>
-          <Paper>
-            <Sidebar />
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={6} sm={12}>
-          <Paper >
-            <Chart />
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={3} sm={12}>
-          <Paper >
+    <div className="max-sm:h-fit h-screen ">
+      <Header />
+      <div className="flex max-lg:flex-col">
+        <div className="w-9/12 max-lg:w-full">
+          <Nav />
+          <Chart />
+          <div className="w-full flex max-sm:flex-col gap-3 max-sm:gap-2">
             <Portfolio />
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={3} sm={12}>
-          <Paper >
             <ExcahangeCurrency />
-          </Paper>
-        </Grid>
-      </Grid>
+          </div>
+        </div>
+        <div className="w-3/12 max-lg:w-full">
+          <Sidebar />
+        </div>
+      </div>
     </div>
   );
 }

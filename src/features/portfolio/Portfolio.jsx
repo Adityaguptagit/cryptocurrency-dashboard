@@ -1,11 +1,10 @@
-/*useState depedency is removed that is currency */
-
+/*useState depedency is removed that is currency while using TrendingCoins*/
 import React, { useState, useEffect } from "react";
 import { TrendingCoins } from "../../config/api";
 import { useSelector } from "react-redux";
 import { Chart as ChartJS } from "chart.js/auto";
 import { Pie } from "react-chartjs-2";
-import { Container, Box } from "@mui/material";
+import { Container } from "@mui/material";
 
 function Portfolio() {
   const currency = useSelector((state) => state.currency.value);
@@ -13,12 +12,9 @@ function Portfolio() {
 
   async function fetchCoins() {
     try {
-      // const jsonData = await fetch(TrendingCoins(currency));
-      const jsonData = await fetch(
-        "https://tusharoxacular09.github.io/cryptocurrency_api/api.json"
-      );
+      const jsonData = await fetch(TrendingCoins(currency));
       const coins = await jsonData.json();
-      setSlicedCoin(coins.slice(8, 11)); //5,8
+      setSlicedCoin(coins.slice(5, 8)); //5,8
     } catch (error) {
       alert(`${error.message} : You've exceeded the Rate Limit`);
     }
@@ -26,135 +22,69 @@ function Portfolio() {
 
   useEffect(() => {
     fetchCoins();
-  },[]);
+  }, [currency]);
 
-  console.log("sleicedcOINS::", slicedCoins);
-  // console.log("sleicedcOINS-name::", slicedCoins[1].name);
+  // items-center
   return (
-    <>
-      <Container>
-        <span
-          style={{
-            display: "inline",
-            justifyContent: "start",
-            fontFamily: "Oswald",
-            fontSize: "1.1rem",
-            padding: "10px",
-            marginLeft: "40px",
+    <Container className=" max-sm:w-full flex flex-col mt-5 p-3 h-80">
+      <div
+        style={{
+          fontSize: "1.5rem",
+          fontFamily: "Oswald",
+        }}
+      >
+        Portfolio
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          fontFamily: "Oswald",
+          fontSize: "1.5rem",
+          color: "#008ae6",
+          marginTop: "10px",
+        }}
+      >
+        Total Value:{" "}
+        {slicedCoins[0]?.current_price +
+          slicedCoins[1]?.current_price +
+          slicedCoins[2]?.current_price}
+      </div>
+
+      <div
+        className="h-56"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <Pie
+          data={{
+            labels: [
+              slicedCoins[0]?.name,
+              slicedCoins[1]?.name,
+              slicedCoins[2]?.name,
+            ],
+            datasets: [
+              {
+                data: [
+                  slicedCoins[0]?.current_price,
+                  slicedCoins[1]?.current_price,
+                  slicedCoins[2]?.current_price,
+                ],
+                backgroundColor: ["#79d1a5", "#0d83b5", "#de7173"],
+                hoverOffset: 4,
+                borderWidth: 0,
+              },
+            ],
           }}
-        >
-          Cardano: {slicedCoins[0]?.current_price}
-        </span>
-        <span
-          style={{
-            display: "inline",
-            justifyContent: "start",
-            fontFamily: "Oswald",
-            fontSize: "1.1rem",
-            padding: "10px",
+          options={{
+            maintainAspectRatio: false,
+            responsive: true,
           }}
-        >
-          Dogecon: {slicedCoins[1]?.current_price}
-        </span>
-        <span
-          style={{
-            display: "inline",
-            justifyContent: "start",
-            fontFamily: "Oswald",
-            fontSize: "1.1rem",
-            padding: "10px",
-          }}
-        >
-          Tron: {slicedCoins[2]?.current_price}
-        </span>
-        <span
-          style={{
-            display: "inline",
-            justifyContent: "left",
-            fontFamily: "Oswald",
-            fontSize: "1.5rem",
-            padding: "10px",
-            color: "",
-          }}
-        >
-          Total Value:{" "}
-          {slicedCoins[0]?.current_price +
-            slicedCoins[1]?.current_price +
-            slicedCoins[2]?.current_price}
-        </span>
-      </Container>
-      <Container>
-        <Box
-          style={{
-            // backgroundColor: "grey",
-            width: "50%",
-            height: "50%",
-          }}
-        >
-          <Pie
-            data={{
-              labels: [
-                slicedCoins[0]?.name,
-                slicedCoins[1]?.name,
-                slicedCoins[2]?.name,
-              ],
-              datasets: [
-                {
-                  data: [
-                    slicedCoins[0]?.current_price,
-                    slicedCoins[1]?.current_price,
-                    slicedCoins[2]?.current_price,
-                  ],
-                  backgroundColor: ["#79d1a5", "#0d83b5", "#de7173"],
-                  hoverOffset: 4,
-                  borderWidth: 0,
-                },
-              ],
-            }}
-            options={{
-              maintainAspectRatio: false,
-              responsive: true,
-            }}
-            style={{
-              width: "70%",
-              height: "70%",
-            }}
-          />
-          {/* <Pie
-            data={{
-              labels: [
-                slicedCoins[0]?.name,
-                slicedCoins[1]?.name,
-                slicedCoins[2]?.name,
-              ],
-              datasets: [
-                {
-                  data: [
-                    slicedCoins[0]?.current_price,
-                    slicedCoins[1]?.current_price,
-                    slicedCoins[2]?.current_price,
-                  ],
-                  backgroundColor: [
-                    "rgb(255, 99, 132)",
-                    "rgb(54, 162, 235)",
-                    "rgb(255, 205, 86)",
-                  ],
-                  hoverOffset: 4,
-                },
-              ],
-            }}
-            options={{
-              maintainAspectRatio: false,
-              responsive: true,
-            }}
-            style={{
-              width: "50%",
-              height:"50%"
-            }}
-          /> */}
-        </Box>
-      </Container>
-    </>
+        />
+      </div>
+    </Container>
   );
 }
 

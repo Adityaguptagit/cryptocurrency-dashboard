@@ -26,22 +26,25 @@ function Sidebar() {
   const [loading, setLoading] = useState(false);
 
   async function fetchCoins() {
-    setLoading(true);
-    // const data = await fetch(TrendingCoins(currency));
-    const data = await fetch(CoinList(currency));
-    const Trendingcoins = await data.json();
-    setTrending(Trendingcoins); //dispatch
-    setLoading(false);
+    try {
+      setLoading(true);
+      // const data = await fetch(TrendingCoins(currency));
+      const data = await fetch(CoinList(currency));
+      const Trendingcoins = await data.json();
+      setTrending(Trendingcoins); //dispatch
+      setLoading(false);
+    } catch (error) {
+      alert(`${error.message} : You've exceeded the Rate Limit`);
+    }
   }
 
-  // useEffect(() => {
-  //   fetchCoins();
-  // }, [currency]);
+  useEffect(() => {
+    fetchCoins();
+  }, [currency]);
 
   const handleSearch = () => {
     if (search) {
       return trending.filter((coin) => {
-        //state
         return (
           coin.name.toLowerCase().includes(search) ||
           coin.symbol.toLowerCase().includes(search)
@@ -50,13 +53,15 @@ function Sidebar() {
     }
     return trending; //state
   };
-console.log(trending);
   return (
     <>
-      <Container style={{ backgroundColor: "yellow" }}>
+      <Container className="mt-10">
+        {/*Heading*/}
         <Typography
           variant="h6"
-          style={{ fontFamily: "Merriweather", fontWeight: "bold" }}
+          style={{
+            fontFamily: "Oswald",
+          }}
         >
           Cryptocurrency by
           <br />
@@ -70,7 +75,7 @@ console.log(trending);
           ) : (
             <Table>
               <TableHead>
-                <TableRow>
+                <TableRow> 
                   {["Coin", "Price", "Market Cap"].map((head) => {
                     return (
                       <TableCell
@@ -90,12 +95,13 @@ console.log(trending);
               </TableHead>
               <TableBody>
                 {handleSearch()
-                  .slice((page - 1) * 10, (page - 1) * 10 + 10)
+                  .slice((page - 1) * 10, (page - 1) * 10 + 7)
                   .map((row) => {
                     const profit = row.price_change_percentage_24h > 0;
 
                     return (
                       <TableRow key={row.id}>
+                        {/*Currency Data*/}
                         <TableCell
                           component="th"
                           scope="row"
@@ -104,7 +110,7 @@ console.log(trending);
                           <img
                             src={row.image}
                             alt={row.name}
-                            height="50"
+                            className="w-[40px] rounded-full"
                             style={{ marginBottom: 10 }}
                           />
                           <div
@@ -129,7 +135,6 @@ console.log(trending);
                             </span>
                           </div>
                         </TableCell>
-
                         <TableCell
                           align="right"
                           style={{
@@ -142,7 +147,6 @@ console.log(trending);
                           {profit && "+"}
                           {row.price_change_percentage_24h.toFixed(2)}%
                         </TableCell>
-
                         <TableCell align="right">
                           {symbol.concat(
                             row.market_cap.toString().slice(0, -6)
@@ -155,6 +159,7 @@ console.log(trending);
             </Table>
           )}
         </TableContainer>
+        {/*Pagination Component*/}
         <Pagination
           style={{
             display: "flex",
@@ -162,7 +167,7 @@ console.log(trending);
             width: "100%",
             justifyContent: "center",
           }}
-          count={(handleSearch().length / 10).toFixed(0)}
+          count={Number((handleSearch().length / 10).toFixed(0))}
           onChange={(_, value) => {
             setPage(value);
             window.scroll(0, 450);
